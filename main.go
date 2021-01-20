@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"strings"
+	"time"
 
 	"./gosort"
 	vs "./visualizer"
@@ -66,7 +67,9 @@ func main() {
 	var selectedOutput string
 
 	algoMap := map[string]gosort.Sorter{
-		"bubble": gosort.BubbleSort,
+		"bubble":    gosort.BubbleSort,
+		"selection": gosort.SelectionSort,
+		"insertion": gosort.InsertionSort,
 	}
 
 	flag.StringVar(&selectedAlgo, "a",
@@ -84,6 +87,15 @@ func main() {
 	sortingFunc := algoMap[selectedAlgo]
 	if sortingFunc != nil {
 		runSort(selectedOutput, selectedAlgo, sortingFunc)
+	} else if selectedAlgo == "all" {
+		for name, sortFunc := range algoMap {
+			runSort(selectedOutput, name, sortFunc)
+			fmt.Println(name)
+
+			if selectedOutput == "stdout" {
+				time.Sleep(1 * time.Second)
+			}
+		}
 	} else {
 		flag.PrintDefaults()
 	}

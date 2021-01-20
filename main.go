@@ -45,6 +45,10 @@ func generateRandomArray(count int, max int) []int {
 
 		//unificating values from 0 to max
 		result[i] = int(number / 255 * float64(max))
+
+		if result[i] == 0 {
+			result[i]++
+		}
 	}
 
 	return result

@@ -19,7 +19,7 @@ var Mode int
 var MaxHeight int
 var test bool = false
 
-type FrameGen func([]int)
+type FrameGen func([]int, int)
 
 //endregion
 
@@ -27,15 +27,15 @@ type FrameGen func([]int)
 
 type Visualizer interface {
 	Setup(string)
-	AddFrame([]int)
+	AddFrame([]int, int)
 	Complete()
 }
 
 func (fg FrameGen) Setup(name string) {
 }
 
-func (fg FrameGen) AddFrame(array []int) {
-	fg(array)
+func (fg FrameGen) AddFrame(array []int, currentValue int) {
+	fg(array, currentValue)
 }
 
 func (fg FrameGen) Complete() {
@@ -61,8 +61,8 @@ func (gv *GifVisualizer) Setup(name string) {
 }
 
 //Builds the frame and added in to a GIF data
-func (gv *GifVisualizer) AddFrame(array []int) {
-	frame := buildImage(array)
+func (gv *GifVisualizer) AddFrame(array []int, currentValue int) {
+	frame := buildImage(array, currentValue)
 	gv.gifdata.Image = append(gv.gifdata.Image, frame)
 	gv.gifdata.Delay = append(gv.gifdata.Delay, 0)
 }
@@ -77,7 +77,7 @@ func (gv *GifVisualizer) Complete() {
 //region Public Methods
 
 //Represents the array as chart on the screen
-func WriteStdout(array []int) {
+func WriteStdout(array []int, currentValue int) {
 	var buffer bytes.Buffer
 
 	for y := 0; y < MaxHeight; y++ {
@@ -128,24 +128,37 @@ func WriteGif(name string, gifdata *gif.GIF) {
 
 //region Private Methods
 
-func buildImage(array []int) *image.Paletted {
+func buildImage(array []int, currentValue int) *image.Paletted {
 	frame := image.NewPaletted(
 		image.Rectangle{
 			image.Point{0, 0},
 			image.Point{len(array), MaxHeight},
 		},
 		color.Palette{
-			color.Gray{uint8(255)},
-			color.RGBA{uint8(53), uint8(183), uint8(219), uint8(1)},
-			color.RGBA{uint8(166), uint8(231), uint8(255), uint8(1)},
+			color.Gray{uint8(255)},                                   //0 - backgound
+			color.RGBA{uint8(53), uint8(183), uint8(219), uint8(1)},  //1 - values
+			color.RGBA{uint8(166), uint8(231), uint8(255), uint8(1)}, //2 - value's backgound
+			color.RGBA{uint8(250), uint8(178), uint8(35), uint8(1)},  //3 - current value
+			color.RGBA{uint8(252), uint8(219), uint8(98), uint8(1)},  //4 - current value's backgound
+
 		},
 	)
 
 	for x, value := range array {
-		frame.SetColorIndex(x, MaxHeight-value, uint8(1)) //set color by index from color.Palette
+
+		if x == currentValue {
+			frame.SetColorIndex(x, MaxHeight-value, uint8(3))
+		} else {
+			frame.SetColorIndex(x, MaxHeight-value, uint8(1))
+		}
+
 		if Mode == 2 {
 			for y := MaxHeight - value + 1; y < MaxHeight; y++ {
-				frame.SetColorIndex(x, y, uint8(2))
+				if x == currentValue {
+					frame.SetColorIndex(x, y, uint8(4))
+				} else {
+					frame.SetColorIndex(x, y, uint8(2))
+				}
 			}
 		}
 	}

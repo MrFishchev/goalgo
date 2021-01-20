@@ -23,11 +23,11 @@ func BubbleSort(arr []int, frameGen vs.FrameGen) {
 		for j := 0; j < len(arr)-1; j++ {
 			if arr[j] > arr[j+1] {
 				arr[j], arr[j+1] = arr[j+1], arr[j]
-				generateFrame(arr, frameGen)
+				generateHighlightedFrame(arr, j+1, frameGen)
 			}
-			generateFrame(arr, frameGen)
+			generateHighlightedFrame(arr, j+1, frameGen)
+
 		}
-		generateFrame(arr, frameGen)
 	}
 }
 
@@ -39,15 +39,14 @@ func SelectionSort(arr []int, frameGen vs.FrameGen) {
 		positionOfMin := i
 		for j := i + 1; j < len(arr); j++ {
 			if arr[j] < arr[positionOfMin] {
-				//TODO select column
 				positionOfMin = j
 			}
-			generateFrame(arr, frameGen)
+			generateHighlightedFrame(arr, j, frameGen)
 		}
 		if positionOfMin != i {
 			arr[i], arr[positionOfMin] = arr[positionOfMin], arr[i]
+			generateHighlightedFrame(arr, i, frameGen)
 		}
-		generateFrame(arr, frameGen)
 	}
 }
 
@@ -60,14 +59,14 @@ func InsertionSort(arr []int, frameGen vs.FrameGen) {
 		position := i
 
 		for position > 0 && arr[position-1] > currentValue {
+			generateHighlightedFrame(arr, position, frameGen)
 			arr[position] = arr[position-1]
 			position--
-
-			generateFrame(arr, frameGen)
+			generateHighlightedFrame(arr, position, frameGen)
 		}
 
 		arr[position] = currentValue
-		generateFrame(arr, frameGen)
+		generateHighlightedFrame(arr, position, frameGen)
 	}
 }
 
@@ -77,7 +76,13 @@ func InsertionSort(arr []int, frameGen vs.FrameGen) {
 
 func generateFrame(arr []int, frameGen vs.FrameGen) {
 	if frameGen != nil {
-		frameGen(arr)
+		frameGen(arr, -1)
+	}
+}
+
+func generateHighlightedFrame(arr []int, currentValue int, frameGen vs.FrameGen) {
+	if frameGen != nil {
+		frameGen(arr, currentValue)
 	}
 }
 

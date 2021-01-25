@@ -34,6 +34,7 @@ Visualization of algorithms (sorting, serching) in Go language
 
 ## How To Run
 
+```sh
 $ go run main.go
     -a string
             Select sorting algorithm [all | bubble | ...] (default "bubble")
@@ -47,6 +48,7 @@ $ go run main.go
             Select output stdout/gif (default "stdout")
     -v int
             Visualization mode 1-dots 2-solid (default 1)
+```
 
 ## License
 

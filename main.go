@@ -74,6 +74,9 @@ func main() {
 		"bubble":    gosort.BubbleSort,
 		"selection": gosort.SelectionSort,
 		"insertion": gosort.InsertionSort,
+		"bogo":      gosort.BogoSort,
+		"cocktail":  gosort.CocktailSort,
+		"shell":     gosort.ShellSort,
 	}
 
 	flag.StringVar(&selectedAlgo, "a",

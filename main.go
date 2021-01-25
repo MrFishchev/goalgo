@@ -96,6 +96,11 @@ func main() {
 		runSort(selectedOutput, selectedAlgo, sortingFunc)
 	} else if selectedAlgo == "all" {
 		for name, sortFunc := range algoMap {
+
+			if name == "bogo" {
+				continue
+			}
+
 			runSort(selectedOutput, name, sortFunc)
 			fmt.Println(name)
 
